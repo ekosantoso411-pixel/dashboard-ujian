@@ -433,7 +433,27 @@
                 throw new Error("Jaringan bermasalah atau akses ditolak");
             }
             
-            bankSoal = await response.json();
+            const rawData = await response.json();
+            
+            // Format ulang data dari Sheet agar opsi A-E menjadi tombol pilihan
+            bankSoal = rawData.map(row => {
+                let opsi = [];
+                // Memasukkan kolom ke dalam array jika tidak kosong
+                if (row['Opsi A'] !== undefined && row['Opsi A'] !== "") opsi.push(row['Opsi A']);
+                if (row['Opsi B'] !== undefined && row['Opsi B'] !== "") opsi.push(row['Opsi B']);
+                if (row['Opsi C'] !== undefined && row['Opsi C'] !== "") opsi.push(row['Opsi C']);
+                if (row['Opsi D'] !== undefined && row['Opsi D'] !== "") opsi.push(row['Opsi D']);
+                if (row['Opsi E'] !== undefined && row['Opsi E'] !== "") opsi.push(row['Opsi E']);
+
+                return {
+                    Judul: row['Judul'] || "",
+                    Teks: row['Teks'] || "",
+                    Gambar: row['Gambar'] || "",
+                    Opsi: opsi,
+                    Kunci: row['Kunci Jawaban'] || "", // Kunci tersimpan di memori browser
+                    JawabanUser: null
+                };
+            });
             
         } catch (error) {
             console.warn("Gagal mengambil dari Google Sheet (mungkin CORS/Fetch diblokir). Memuat data cadangan (Dummy Data)...");
