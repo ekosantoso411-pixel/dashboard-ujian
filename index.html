@@ -47,9 +47,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s ease-in-out;
         }
         
-        /* Status Warna Nomor Soal (Berdasarkan gambar) */
+        .number-btn:hover {
+            background-color: #eee;
+        }
+        
+        /* Status Warna Nomor Soal */
         .number-btn.answered {
             background-color: #4CAF50; /* Hijau - Sudah dijawab */
             color: white;
@@ -73,11 +78,12 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         /* Header Atas (Biru) */
         .header {
-            background-color: #1A4EB1; /* Warna biru mirip di gambar */
+            background-color: #1A4EB1;
             color: white;
             padding: 15px 20px;
             display: flex;
@@ -192,59 +198,8 @@
     <!-- Sidebar Kiri: Navigasi Nomor Soal -->
     <div class="sidebar">
         <div class="sidebar-header">Daftar Soal</div>
-        <div class="number-grid">
-            <!-- Contoh status tombol:
-                 answered = hijau (sudah dijawab)
-                 current = biru (soal aktif)
-                 marked = kuning (ragu-ragu)
-                 (kosong) = putih (belum dijawab) -->
-            <button class="number-btn answered">1</button>
-            <button class="number-btn answered">2</button>
-            <button class="number-btn answered">3</button>
-            <button class="number-btn answered">4</button>
-            <button class="number-btn answered">5</button>
-            
-            <button class="number-btn answered">6</button>
-            <button class="number-btn answered">7</button>
-            <button class="number-btn answered">8</button>
-            <button class="number-btn answered">9</button>
-            <button class="number-btn answered">10</button>
-            
-            <button class="number-btn answered">11</button>
-            <button class="number-btn answered">12</button>
-            <button class="number-btn answered">13</button>
-            <button class="number-btn answered">14</button>
-            <button class="number-btn answered">15</button>
-            
-            <button class="number-btn answered">16</button>
-            <button class="number-btn answered">17</button>
-            <button class="number-btn answered">18</button>
-            <button class="number-btn answered">19</button>
-            <button class="number-btn answered">20</button>
-            
-            <button class="number-btn answered">21</button>
-            <button class="number-btn answered">22</button>
-            <button class="number-btn answered">23</button>
-            <button class="number-btn answered">24</button>
-            <button class="number-btn answered">25</button>
-            
-            <button class="number-btn answered">26</button>
-            <button class="number-btn answered">27</button>
-            <button class="number-btn answered">28</button>
-            <button class="number-btn answered">29</button>
-            <button class="number-btn answered">30</button>
-            
-            <button class="number-btn marked">31</button>
-            <button class="number-btn marked">32</button>
-            <button class="number-btn answered">33</button>
-            <button class="number-btn current">34</button> 
-            <button class="number-btn">35</button>
-            
-            <button class="number-btn">36</button>
-            <button class="number-btn">37</button>
-            <button class="number-btn">38</button>
-            <button class="number-btn">39</button>
-            <button class="number-btn">40</button>
+        <div class="number-grid" id="numberGrid">
+            <div style="grid-column: span 5; font-size: 12px; color: #666;">Memuat soal...</div>
         </div>
     </div>
 
@@ -257,7 +212,6 @@
                 <div class="title">AP 1</div>
                 <div class="subtitle">KOMPUTER CLIENT [21-010-2026 08:25:27]</div>
             </div>
-            <!-- Di gambar aslinya mungkin ada sisa waktu atau tombol profil di kanan -->
         </div>
 
         <!-- Area Konten Soal -->
@@ -266,7 +220,7 @@
             <!-- Bar Info Atas -->
             <div class="info-bar">
                 <div class="info-box">
-                    <div style="font-weight: bold; color: #555;">Soal 34 dari 40</div>
+                    <div id="infoSoalText" style="font-weight: bold; color: #555;">Memuat...</div>
                     <div class="font-sizer">
                         <span title="Ukuran teks kecil">A</span>
                         <span title="Ukuran teks sedang">A</span>
@@ -282,71 +236,140 @@
             <div class="question-content">
                 <div class="instruction">Perhatikan informasi berikut!</div>
                 
-                <div class="question-title">PEWARISAN GOLONGAN DARAH DALAM KELUARGA</div>
+                <div class="question-title" id="judulSoal">Tunggu sebentar...</div>
                 
-                <div class="question-text">
-                    Golongan darah merupakan salah satu sifat yang dapat diwariskan dari orang tua kepada anak. Pewarisan golongan darah dikendalikan oleh alel ganda pada sistem ABO yang melibatkan tiga alel, yaitu I<sup>A</sup>, I<sup>B</sup>, dan I<sup>O</sup>. Alel I<sup>A</sup> dan I<sup>B</sup> bersifat kodominan, yang dapat terekspresi secara bersamaan pada individu yang memiliki keduanya. Sementara itu, alel I<sup>O</sup> bersifat resesif, artinya tertutupi jika berpasangan dengan alel I<sup>A</sup> atau I<sup>B</sup>.
-                    <br><br>
-                    Untuk mempelajari pola pewarisan golongan darah dalam suatu keluarga, dilakukan pencatatan golongan darah beberapa anggota selama dua generasi. Hasil pencatatan disajikan dalam bentuk peta silsilah berikut.
+                <div class="question-text" id="teksSoal">
+                    Sedang memuat data soal...
                 </div>
                 
                 <!-- Tempat Gambar Silsilah -->
-                <div class="image-placeholder">
-                    [Area Gambar Peta Silsilah]
+                <div class="image-placeholder" id="gambarSoal">
+                    [Area Gambar]
                 </div>
                 
-                <div class="question-prompt">
-                    Berdasarkan hasil pencatatan, pernyataan yang sesuai untuk golongan darah keluarga tersebut adalah ...... (pilih lebih dari satu jawaban yang benar)
+                <div class="question-prompt" id="promptSoal">
+                    Pilih jawaban yang benar berdasarkan teks di atas.
                 </div>
-                
-                <!-- Opsi Jawaban (Tidak terlihat di foto, ditambahkan sebagai pelengkap) -->
-                <!--
-                <div style="margin-top: 30px;">
-                    <div><input type="checkbox" id="opsi1"> <label for="opsi1">Opsi A</label></div>
-                    <div><input type="checkbox" id="opsi2"> <label for="opsi2">Opsi B</label></div>
-                    <div><input type="checkbox" id="opsi3"> <label for="opsi3">Opsi C</label></div>
-                    <div><input type="checkbox" id="opsi4"> <label for="opsi4">Opsi D</label></div>
-                </div>
-                -->
             </div>
             
         </div>
     </div>
     
 <script>
-    // Ganti URL di bawah dengan URL Aplikasi Web (Web App URL) dari Google Apps Script Anda
     const sheetURL = "https://script.google.com/macros/s/AKfycbx3vUiqsJ1w9jtydoPIurfspwZqBlvLYSs7Ux_aoA_EyJRw2OJtyDn67wsYCKk7sH6A/exec";
+    
+    let bankSoal = []; 
+    let indexSoalAktif = 0; 
 
     // Fungsi untuk mengambil data soal
     async function ambilDataSoal() {
         try {
-            // Mengambil data dari Google Sheet
+            // Mencoba mengambil dari Google Sheet
             const response = await fetch(sheetURL);
-            const dataSoal = await response.json();
-
-            // Misal kita tampilkan soal pertama (index 0)
-            tampilkanSoal(dataSoal[0]); 
+            
+            if (!response.ok) {
+                throw new Error("Jaringan bermasalah atau akses ditolak");
+            }
+            
+            bankSoal = await response.json();
+            
         } catch (error) {
-            console.error("Gagal mengambil data:", error);
-            document.querySelector('.question-text').innerHTML = "Gagal memuat soal. Periksa koneksi internet.";
+            console.warn("Gagal mengambil dari Google Sheet (mungkin CORS/Fetch diblokir). Memuat data cadangan (Dummy Data)...");
+            
+            // DATA CADANGAN JIKA ERROR
+            bankSoal = [
+                {
+                    Judul: "PEWARISAN GOLONGAN DARAH DALAM KELUARGA",
+                    Teks: "Golongan darah merupakan salah satu sifat yang dapat diwariskan dari orang tua kepada anak. Pewarisan golongan darah dikendalikan oleh alel ganda pada sistem ABO yang melibatkan tiga alel, yaitu I<sup>A</sup>, I<sup>B</sup>, dan I<sup>O</sup>.<br><br>Untuk mempelajari pola pewarisan golongan darah dalam suatu keluarga, dilakukan pencatatan golongan darah beberapa anggota selama dua generasi.",
+                    Gambar: "https://placehold.co/600x300/f0f0f0/999999?text=Gambar+Silsilah+Keluarga"
+                },
+                {
+                    Judul: "SISTEM EKSKRESI",
+                    Teks: "Ginjal adalah organ utama dalam sistem ekskresi manusia yang berfungsi menyaring darah. Nefron merupakan unit fungsional terkecil dari ginjal.",
+                    Gambar: ""
+                },
+                {
+                    Judul: "HUKUM NEWTON II",
+                    Teks: "Percepatan yang ditimbulkan oleh gaya yang bekerja pada suatu benda berbanding lurus dengan besar gaya dan berbanding terbalik dengan massa benda.",
+                    Gambar: "https://placehold.co/400x200/f0f0f0/999999?text=Diagram+Gaya"
+                },
+                {
+                    Judul: "SOAL NOMOR 4",
+                    Teks: "Ini adalah teks percobaan untuk memastikan bahwa sistem navigasi tombol soal nomor 4 berfungsi dengan baik.",
+                    Gambar: ""
+                },
+                {
+                    Judul: "SOAL NOMOR 5",
+                    Teks: "Ini adalah teks soal terakhir dari contoh data cadangan (dummy). Anda bisa klik nomor 1 untuk kembali.",
+                    Gambar: ""
+                }
+            ];
+        }
+
+        if (bankSoal && bankSoal.length > 0) {
+            buatTombolNavigasi(); 
+            tampilkanSoal(0);     
+        } else {
+            document.getElementById('teksSoal').innerHTML = "Data soal kosong.";
         }
     }
 
-    // Fungsi untuk menyuntikkan data ke dalam HTML
-    function tampilkanSoal(soal) {
-        // Memasukkan Judul Soal
-        document.querySelector('.question-title').innerText = soal.Judul;
+    // Fungsi untuk membuat tombol navigasi secara otomatis
+    function buatTombolNavigasi() {
+        const grid = document.getElementById('numberGrid');
+        grid.innerHTML = ''; // Kosongkan area grid
+
+        bankSoal.forEach((soal, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'number-btn';
+            btn.innerText = index + 1; // Nomor urut mulai dari 1
+            
+            // Ketika tombol diklik, panggil fungsi tampilkanSoal dengan index yang sesuai
+            btn.onclick = () => tampilkanSoal(index);
+            
+            grid.appendChild(btn);
+        });
+    }
+
+    // Fungsi untuk menyuntikkan data ke dalam HTML berdasarkan nomor yang diklik
+    function tampilkanSoal(index) {
+        indexSoalAktif = index;
+        const soal = bankSoal[index];
+
+        // 1. Update teks "Soal X dari Y" di info-bar atas
+        document.getElementById('infoSoalText').innerText = `Soal ${index + 1} dari ${bankSoal.length}`;
+
+        // 2. Memasukkan Judul Soal
+        document.getElementById('judulSoal').innerText = soal.Judul || "";
         
-        // Memasukkan Teks Soal
-        document.querySelector('.question-text').innerHTML = soal.Teks;
+        // 3. Memasukkan Teks Soal
+        document.getElementById('teksSoal').innerHTML = soal.Teks || "";
         
-        // Memasukkan Gambar (jika link gambar ada di kolom 'Gambar')
-        const imagePlaceholder = document.querySelector('.image-placeholder');
-        if(soal.Gambar && soal.Gambar !== "") {
-            imagePlaceholder.innerHTML = `<img src="${soal.Gambar}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+        // 4. Memasukkan Gambar (jika ada)
+        const imagePlaceholder = document.getElementById('gambarSoal');
+        if(soal.Gambar && soal.Gambar.trim() !== "") {
+            imagePlaceholder.style.display = 'flex'; // Munculkan kotaknya
+            imagePlaceholder.innerHTML = `<img src="${soal.Gambar}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Gambar Soal">`;
         } else {
             imagePlaceholder.style.display = 'none'; // Sembunyikan jika tidak ada gambar
         }
+
+        // 5. Update warna tombol yang sedang aktif (biru)
+        updateWarnaTombol();
+    }
+
+    // Fungsi untuk mengubah warna tombol yang sedang aktif
+    function updateWarnaTombol() {
+        const semuaTombol = document.querySelectorAll('.number-btn');
+        semuaTombol.forEach((btn, index) => {
+            // Hapus class 'current' dari semua tombol
+            btn.classList.remove('current');
+            
+            // Tambahkan class 'current' hanya ke tombol soal yang sedang aktif
+            if (index === indexSoalAktif) {
+                btn.classList.add('current');
+            }
+        });
     }
 
     // Jalankan fungsi saat halaman pertama kali dibuka
