@@ -312,6 +312,45 @@
             
         </div>
     </div>
+    
+<script>
+    // Ganti URL di bawah dengan URL Aplikasi Web (Web App URL) dari Google Apps Script Anda
+    const sheetURL = "https://script.google.com/macros/s/AKfycbx3vUiqsJ1w9jtydoPIurfspwZqBlvLYSs7Ux_aoA_EyJRw2OJtyDn67wsYCKk7sH6A/exec";
 
+    // Fungsi untuk mengambil data soal
+    async function ambilDataSoal() {
+        try {
+            // Mengambil data dari Google Sheet
+            const response = await fetch(sheetURL);
+            const dataSoal = await response.json();
+
+            // Misal kita tampilkan soal pertama (index 0)
+            tampilkanSoal(dataSoal[0]); 
+        } catch (error) {
+            console.error("Gagal mengambil data:", error);
+            document.querySelector('.question-text').innerHTML = "Gagal memuat soal. Periksa koneksi internet.";
+        }
+    }
+
+    // Fungsi untuk menyuntikkan data ke dalam HTML
+    function tampilkanSoal(soal) {
+        // Memasukkan Judul Soal
+        document.querySelector('.question-title').innerText = soal.Judul;
+        
+        // Memasukkan Teks Soal
+        document.querySelector('.question-text').innerHTML = soal.Teks;
+        
+        // Memasukkan Gambar (jika link gambar ada di kolom 'Gambar')
+        const imagePlaceholder = document.querySelector('.image-placeholder');
+        if(soal.Gambar && soal.Gambar !== "") {
+            imagePlaceholder.innerHTML = `<img src="${soal.Gambar}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+        } else {
+            imagePlaceholder.style.display = 'none'; // Sembunyikan jika tidak ada gambar
+        }
+    }
+
+    // Jalankan fungsi saat halaman pertama kali dibuka
+    window.onload = ambilDataSoal;
+</script>
 </body>
 </html>
